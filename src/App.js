@@ -1,24 +1,35 @@
-import logo from './logo.svg';
+import { useForm } from "react-hook-form";
 import './App.css';
 
 function App() {
+  const { register, formState: { errors }, handleSubmit } = useForm();
+  const onSubmit = data => console.log(data);
+   
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input placeholder="Name" {...register("firstName", { required: true, minLength: 2 })} />
+      <br />
+      {errors.firstName?.type === 'required' && "Поле обязательно к заполнению"}
+      {errors.firstName?.type === 'minLength' && "Поле не должно быть менее 2 символов"}
+      <br />
+      <input placeholder="Last Name" {...register("lastName", { required: true, minLength: 2 })} />
+      <br />
+      {errors.lastName?.type === 'required' && "Поле обязательно к заполнению"}
+      {errors.lastName?.type === 'minLength' && "Поле не должно быть менее 2 символов"}
+      <br />
+      <input type="text" placeholder="Email" {...register("email", { pattern: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i })} />
+      <br />
+      {errors.email?.type === 'pattern' && "Ошибка в почте"}
+      <br />
+      <input placeholder="Password" {...register("password", { required: true, minLength: 6 })} />
+      <br />
+      {errors.password?.type === 'required' && "Поле обязательно к заполнению"}
+      {errors.password?.type === 'minLength' && "Поле не должно быть менее 6 символов"}
+      <br />
+      <input placeholder="Age" type="number" {...register("age", { min: 18, max: 60 })} />
+      <br />
+      <input type="submit" />
+    </form>
   );
 }
 
